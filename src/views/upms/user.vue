@@ -100,6 +100,34 @@ export default {
         })
       })
     }
+  },
+  beforeCreate: function() {
+    // 组件实例化之前
+    console.log('1===beforeCreate===')
+  },
+  created: function() { // 组件实例化了
+    console.log('2===created===')
+  },
+  beforeMount: function() { // 组件写入dom结构之前
+    console.log('3===beforeMount===')
+  },
+  mounted: function() {
+    this.$nextTick(function() {
+      // 代码保证 this.$el 在 document 中
+      console.log('7===mounted===')
+    })
+  },
+  beforeUpdate: function() { // 组件更新前
+    console.log('5===beforeUpdate===')
+  },
+  updated: function() { // 组件更新比如修改了文案
+    console.log('6===updated===')
+  },
+  beforeDestroy: function() { // 组件销毁之前
+    console.log('7===beforeDestroy===')
+  },
+  destroyed: function() { // 组件已经销毁
+    console.log('8===destroyed===')
   }
 }
 </script>

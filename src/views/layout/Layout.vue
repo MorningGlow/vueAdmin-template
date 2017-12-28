@@ -21,6 +21,8 @@ export default {
   computed: {
     sidebar() {
       return this.$store.state.app.sidebar
+    },
+    AppMain() {
     }
   }
 }
