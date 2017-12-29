@@ -8,6 +8,9 @@ const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
   baseURL: '',
   timeout: 15000 // 请求超时时间
+  // transformRequest: [function(data) {
+  //   return qs.stringify(data)
+  // }]
 })
 
 // request拦截器
