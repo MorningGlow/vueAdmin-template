@@ -13,31 +13,24 @@
           <span style="margin-left: 10px">{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" width="100">
+      <el-table-column label="角色名" width="200">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.username }}</span>
+          <span style="margin-left: 10px">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="密码" width="60">
+      <el-table-column label="父角色" width="150">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.password |formatPsd }}</span>
+          <span style="margin-left: 10px">{{ scope.row.pname }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="角色" width="180">
+      <el-table-column label="描述" width="180">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.roleNames }}</span>
+          <span style="margin-left: 10px">{{ scope.row.remark }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建日期" width="185">
+      <el-table-column label="别名" width="150">
         <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 5px">{{ scope.row.createdatetime |formatDate }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="修改日期" width="185">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 5px">{{ scope.row.modifydatetime |formatDate }}</span>
+          <span style="margin-left: 10px">{{ scope.row.alias }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -65,8 +58,9 @@
 </template>
 <script>
 import request from '@/utils/request'
-import userEdit from './userEdit'
-import userAdd from './userAdd'
+// import Qs from 'qs'
+import Edit from './roleEdit'
+import Add from './roleAdd'
 export default {
   data() {
     return {
@@ -97,6 +91,20 @@ export default {
     },
     handleDelete(index, row) {
       console.log(index, row)
+      var _this = this
+      request({
+        url: 'http://10.30.90.45:9991/api/auth/roleController/delete',
+        method: 'delete',
+        params: {
+          id: row.id
+        }
+      }).then(function(response) {
+        console.log(response)
+        // _this.handleList(_this.currentPage, _this.pageSize)
+        _this.handleCurrentChange(1)
+      }).catch(function(error) {
+        console.log(error)
+      })
     },
     handleAdd(index, row) {
       console.log(index, row)
@@ -106,6 +114,8 @@ export default {
       this.dialogFormVisible = false
       this.dialogEditFormVisible = false
       console.log('close dialogFormVisible:' + this.dialogFormVisible)
+      var _this = this
+      _this.handleList(_this.currentPage, _this.pageSize)
     },
     handleList(currentPage, pageSize) {
       var _this = this
@@ -117,7 +127,7 @@ export default {
         pageSize = 10
       }
       request({
-        url: 'http://10.30.90.45:9991/api/auth/userController/list',
+        url: 'http://10.30.90.45:9991/api/auth/roleController/list',
         method: 'get',
         params: {
           page: currentPage,
@@ -183,18 +193,8 @@ export default {
     }
   },
   components: {
-    'edit': userEdit,
-    'add': userAdd
-  },
-  beforeCreate: function() {
-    // 组件实例化之前
-    console.log('1===beforeCreate===')
-  },
-  created: function() { // 组件实例化了
-    console.log('2===created===')
-  },
-  beforeMount: function() { // 组件写入dom结构之前
-    console.log('3===beforeMount===')
+    'edit': Edit,
+    'add': Add
   },
   mounted: function() {
     this.$nextTick(function() {
@@ -203,18 +203,6 @@ export default {
       var _this = this
       _this.handleList(_this.currentPage, _this.pageSize)
     })
-  },
-  beforeUpdate: function() { // 组件更新前
-    console.log('5===beforeUpdate===')
-  },
-  updated: function() { // 组件更新比如修改了文案
-    console.log('6===updated===')
-  },
-  beforeDestroy: function() { // 组件销毁之前
-    console.log('7===beforeDestroy===')
-  },
-  destroyed: function() { // 组件已经销毁
-    console.log('8===destroyed===')
   }
 }
 </script>

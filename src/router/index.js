@@ -8,6 +8,9 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
+import resource from '../views/upms/resource/resource'
+import role from '../views/upms/role/role'
+import user from '../views/upms/user'
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -65,19 +68,19 @@ export const constantRouterMap = [
       {
         path: 'user',
         name: '用户',
-        component: _import('upms/user'),
+        component: user,
         meta: { title: '用户', icon: 'table' }
       },
       {
         path: 'role',
         name: 'role',
-        component: _import('upms/role'),
+        component: role,
         meta: { title: '角色', icon: 'tree' }
       },
       {
         path: 'resource',
         name: 'resource',
-        component: _import('upms/resource'),
+        component: resource,
         meta: { title: '资源', icon: 'tree' }
       }
     ]
