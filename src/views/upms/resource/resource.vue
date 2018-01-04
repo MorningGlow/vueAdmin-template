@@ -18,9 +18,19 @@
           <span style="margin-left: 10px">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="url" width="180">
+      <el-table-column label="url" width="190">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.url }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="资源类型" width="120">
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.typeName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="所属系统名称" width="120">
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.sysName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="描述" width="180">
@@ -53,6 +63,8 @@
 </template>
 <script>
 import request from '@/utils/request'
+// import $ from 'jquery'
+// import ztree from 'ztree'
 // import Qs from 'qs'
 import Edit from './resourceEdit'
 import Add from './resourceAdd'
@@ -105,6 +117,7 @@ export default {
       this.dialogFormVisible = false
       this.dialogEditFormVisible = false
       console.log('close dialogFormVisible:' + this.dialogFormVisible)
+      console.log('close dialogEditFormVisible:' + this.dialogEditFormVisible)
       var _this = this
       _this.handleList(_this.currentPage, _this.pageSize)
     },

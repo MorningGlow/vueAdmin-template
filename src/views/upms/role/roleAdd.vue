@@ -113,10 +113,10 @@ export default {
             })
           }).then(function(response) {
             console.log(response)
+            _this.$emit('listenToChildEvent')
           }).catch(function(error) {
             console.log(error)
           })
-          this.$emit('listenToChildEvent')
         } else {
           console.log('error submit!!')
           return false

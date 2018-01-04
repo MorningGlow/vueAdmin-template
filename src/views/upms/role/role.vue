@@ -1,59 +1,70 @@
 <template>
   <div>
-    <el-table :data="tableData" ref="multipleTable"
-              tooltip-effect="dark"
-              highlight-current-row
-              @selection-change="handleSelectionChange">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column label="ID" width="200">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="角色名" width="200">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="父角色" width="150">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.pname }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="描述" width="180">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.remark }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="别名" width="150">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.alias }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          <el-button size="mini" type="danger" @click="handleAdd(scope.$index, scope.row)">增加</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[7, 10, 15, 20]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
-      </el-pagination>
-    </div>
-    <edit :item="item" :dialogEditFormVisible="dialogEditFormVisible" v-if="dialogEditFormVisible" v-on:listenToChildEvent="handleClose"></edit>
-    <add v-bind:dialogFormVisible="dialogFormVisible" v-if="dialogFormVisible" v-on:listenToChildEvent="handleClose"></add>
+    <el-row>
+      <div style="margin-left: 5px">
+        <el-button size="mini" type="danger" @click="handleAdd()">增加</el-button>
+      </div>
+    </el-row>
+
+    <el-row>
+      <el-table :data="tableData" ref="multipleTable"
+                tooltip-effect="dark"
+                highlight-current-row
+                @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column label="ID" width="200">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="角色名" width="200">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="父角色" width="150">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.pname }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="描述" width="180">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.remark }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="别名" width="150">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.alias }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <!--<el-button size="mini" type="danger" @click="handleAdd(scope.$index, scope.row)">增加</el-button>-->
+            <el-button size="mini" type="danger" @click="handleGrant(scope.$index, scope.row)">授权</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[7, 10, 15, 20]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div>
+      <edit :item="item" :dialogEditFormVisible="dialogEditFormVisible" v-if="dialogEditFormVisible" v-on:listenToChildEvent="handleClose"></edit>
+      <add v-bind:dialogFormVisible="dialogFormVisible" v-if="dialogFormVisible" v-on:listenToChildEvent="handleClose"></add>
+      <grant v-bind:dialogGrantFormVisible="dialogGrantFormVisible" v-if="dialogGrantFormVisible" v-on:listenToChildNodeEvent="handleCloseGrant"></grant>
+    </el-row>
+
   </div>
 </template>
 <script>
@@ -61,6 +72,7 @@ import request from '@/utils/request'
 // import Qs from 'qs'
 import Edit from './roleEdit'
 import Add from './roleAdd'
+import Grant from './grantResource'
 export default {
   data() {
     return {
@@ -70,7 +82,9 @@ export default {
       tableData: [],
       dialogFormVisible: false,
       dialogEditFormVisible: false,
-      item: {}
+      dialogGrantFormVisible: false,
+      item: {},
+      nodes: []
     }
   },
   methods: {
@@ -88,6 +102,10 @@ export default {
       console.log(index, row)
       this.item = row
       console.log('dialogEditFormVisible:' + this.dialogEditFormVisible)
+    },
+    handleGrant(index, row) {
+      this.dialogGrantFormVisible = true
+      console.log('dialogGrantFormVisible:' + this.dialogGrantFormVisible)
     },
     handleDelete(index, row) {
       console.log(index, row)
@@ -113,9 +131,16 @@ export default {
     handleClose() {
       this.dialogFormVisible = false
       this.dialogEditFormVisible = false
+      this.dialogGrantFormVisible = false
       console.log('close dialogFormVisible:' + this.dialogFormVisible)
       var _this = this
       _this.handleList(_this.currentPage, _this.pageSize)
+    },
+    handleCloseGrant(nodes) {
+      var _this = this
+      _this.dialogGrantFormVisible = false
+      // _this.handleList(_this.currentPage, _this.pageSize)
+      console.log('从子组件获得role nodes: ' + nodes)
     },
     handleList(currentPage, pageSize) {
       var _this = this
@@ -194,7 +219,8 @@ export default {
   },
   components: {
     'edit': Edit,
-    'add': Add
+    'add': Add,
+    'grant': Grant
   },
   mounted: function() {
     this.$nextTick(function() {

@@ -4,16 +4,28 @@
     <el-dialog title="编辑角色" :visible="dialogEditFormVisible">
       <el-form :model="item" status-icon :rules="rules" ref="item" label-width="100px" class="demo-ruleForm">
         <el-form-item label="id" prop="id">
-          <el-input :disabled="true" v-model="item.id"></el-input>
+          <el-input :disabled="false" v-model="item.id"></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="name">
+        <el-form-item label="资源" prop="name">
           <el-input v-model="item.name"></el-input>
         </el-form-item>
-        <el-form-item label="父角色" prop="pname">
+        <el-form-item label="父资源" prop="pname">
           <el-input v-model="item.pname"></el-input>
         </el-form-item>
-        <el-form-item label="别名" prop="alias">
-          <el-input v-model="item.alias"></el-input>
+        <el-form-item label="资源类型">
+          <el-select v-model="item.typeId" placeholder="资源类型">
+            <el-option label="资源" value="1"></el-option>
+            <el-option label="菜单" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所属系统">
+          <el-select v-model="item.sysId" placeholder="所属系统">
+            <el-option label="upms" value="1"></el-option>
+            <el-option label="排程" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="描述" prop="remark">
+          <el-input v-model="item.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -68,7 +80,7 @@ export default {
   props: ['item', 'dialogEditFormVisible'],
   methods: {
     handleEdit(index, row) {
-      this.dialogEditFormVisible = true
+      // this.dialogEditFormVisible = true
       console.log(index, row)
     },
     submitForm(formName) {
@@ -79,19 +91,22 @@ export default {
           console.log(formName)
           alert('submit!')
           request({
-            url: 'http://10.30.90.45:9991/api/auth/roleController/edit',
-            method: 'post',
+            url: 'http://10.30.90.45:9991/api/auth/resource/',
+            method: 'put',
             data: Qs.stringify({
               id: _this.item.id,
               name: _this.item.name,
-              alias: _this.item.alias
+              pname: _this.item.pname,
+              remark: _this.item.remark,
+              typeId: _this.item.typeId,
+              sysId: _this.item.sysId
             })
           }).then(function(response) {
-            console.log(response)
+            console.log(response + '下面执行向父组件提交变化')
+            _this.$emit('listenToChildEvent')
           }).catch(function(error) {
             console.log(error)
           })
-          this.$emit('listenToChildEvent')
         } else {
           console.log('error submit!!')
           return false

@@ -6,14 +6,32 @@
         <el-form-item label="id" prop="id">
           <el-input :disabled="false" v-model="item.id"></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="name">
+        <el-form-item label="资源" prop="name">
           <el-input v-model="item.name"></el-input>
         </el-form-item>
-        <el-form-item label="父角色" prop="pname">
+        <el-form-item label="父资源" prop="pname">
           <el-input v-model="item.pname"></el-input>
         </el-form-item>
-        <el-form-item label="别名" prop="alias">
-          <el-input v-model="item.alias"></el-input>
+        <!--<el-form-item label="资源类型" prop="typeId">-->
+          <!--<el-input v-model="item.typeId"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="所属系统" prop="sysId">-->
+          <!--<el-input v-model="item.sysId"></el-input>-->
+        <!--</el-form-item>-->
+        <el-form-item label="资源类型">
+          <el-select v-model="item.typeId" placeholder="资源类型">
+            <el-option label="资源" value="1"></el-option>
+            <el-option label="菜单" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所属系统">
+          <el-select v-model="item.sysId" placeholder="所属系统">
+            <el-option label="upms" value="1"></el-option>
+            <el-option label="排程" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="描述" prop="remark">
+          <el-input v-model="item.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -69,7 +87,11 @@ export default {
         id: '',
         name: '',
         pname: '',
-        alias: ''
+        remark: '',
+        sysId: '',
+        typeId: '',
+        sysName: '',
+        typeName: ''
       },
       dialogTableVisible: false,
       dialogVisible: false,
@@ -85,6 +107,14 @@ export default {
         ],
         name: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
+          { min: 5, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur' }
+        ],
+        sysId: [
+          { required: true, message: '请输入所属系统名称', trigger: 'blur' },
+          { min: 5, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur' }
+        ],
+        typeId: [
+          { required: true, message: '请输入资源类型名称', trigger: 'blur' },
           { min: 5, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur' }
         ]
       }
@@ -104,19 +134,22 @@ export default {
           console.log(formName)
           alert('submit!')
           request({
-            url: 'http://10.30.90.45:9991/api/auth/roleController/add',
+            url: 'http://10.30.90.45:9991/api/auth/resource/',
             method: 'post',
             data: Qs.stringify({
               id: _this.item.id,
               name: _this.item.name,
-              alias: _this.item.alias
+              pname: _this.item.pname,
+              remark: _this.item.remark,
+              typeId: _this.item.typeId,
+              sysId: _this.item.sysId
             })
           }).then(function(response) {
             console.log(response)
+            _this.$emit('listenToChildEvent')
           }).catch(function(error) {
             console.log(error)
           })
-          this.$emit('listenToChildEvent')
         } else {
           console.log('error submit!!')
           return false
