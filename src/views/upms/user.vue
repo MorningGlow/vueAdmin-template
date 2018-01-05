@@ -69,7 +69,7 @@
       </div>
       <edit :item="item" :dialogEditFormVisible="dialogEditFormVisible" v-if="dialogEditFormVisible" v-on:listenToChildEvent="handleClose"></edit>
       <add v-bind:dialogFormVisible="dialogFormVisible" v-if="dialogFormVisible" v-on:listenToChildEvent="handleClose"></add>
-      <grant v-bind:dialogGrantFormVisible="dialogGrantFormVisible" v-if="dialogGrantFormVisible" v-on:listenToChildNodeEvent="handleCloseGrant"></grant>
+      <grant :item="item" v-bind:dialogGrantFormVisible="dialogGrantFormVisible" v-if="dialogGrantFormVisible" v-on:listenToChildNodeEvent="handleCloseGrant"></grant>
     </el-row>
 
   </div>
@@ -117,6 +117,7 @@ export default {
     },
     handleGrant(index, row) {
       this.dialogGrantFormVisible = true
+      this.item = row
       console.log('dialogGrantFormVisible:' + this.dialogGrantFormVisible)
     },
     handleClose() {

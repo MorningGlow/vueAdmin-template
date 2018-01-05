@@ -8,7 +8,7 @@
         type="selection"
         width="55">
       </el-table-column>
-      <el-table-column label="ID" width="200">
+      <el-table-column label="ID" width="180">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.id }}</span>
         </template>
@@ -18,17 +18,22 @@
           <span style="margin-left: 10px">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="父级资源" width="100">
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.pname }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="url" width="190">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.url }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="资源类型" width="120">
+      <el-table-column label="资源类型" width="100">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.typeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属系统名称" width="120">
+      <el-table-column label="系统名称" width="100">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.sysName }}</span>
         </template>

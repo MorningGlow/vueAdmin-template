@@ -3,7 +3,7 @@
     <el-dialog title="授权" :visible="dialogGrantFormVisible">
         <ul id="treeDemo" class="ztree"></ul>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="sendClose()">取 消</el-button>
+        <el-button @click="sendNode()">取 消</el-button>
         <el-button type="primary" @click="submitForm('item')">确 定</el-button>
       </div>
     </el-dialog>
@@ -13,8 +13,8 @@
 // import request from '@/utils/request'
 import $ from 'jquery'
 import ztree from 'ztree'
-// import request from '@/utils/request'
-// import Qs from 'qs'
+import request from '@/utils/request'
+import Qs from 'qs'
 import 'ztree/css/metroStyle/metroStyle.css'
 export default {
   data() {
@@ -29,24 +29,22 @@ export default {
         },
         data: {
           simpleData: {
-            enable: true
+            enable: true,
+            idkey: 'id',
+            pIdKey: 'pid',
+            rootPid: null
           }
         },
         edit: {
           enable: false
         }},
       zNodes: [
-        { id: '1', pId: '', name: 'UPMS所有权限', open: true },
-        { id: '2', pId: '1', name: '用户浏览权限' },
-        { id: '城标东奔西走要', pId: '1', name: '天地六合' },
-        { id: '3', pId: '', name: '用户编辑权限' },
-        { id: '4', pId: '3', name: '不显示 节点 图标' },
-        { id: 108, pId: 4, name: '异步加载 节点数据' },
-        { id: 109, pId: 1, name: '用 zTree 方法 异步加载 节点数据' }
-      ]
+      ],
+      ids: '',
+      roleIds: ''
     }
   },
-  props: ['dialogGrantFormVisible'],
+  props: ['item', 'dialogGrantFormVisible'],
   methods: {
     handleEdit(index, row) {
       this.dialogFormVisible = true
@@ -57,8 +55,35 @@ export default {
       var treeObj = $.fn.zTree.getZTreeObj('treeDemo')
       var nodes = treeObj.getCheckedNodes(true)
       console.log('选中的 nodes: ' + nodes)
-      this.$emit('listenToChildNodeEvent', nodes)
       console.log('listenToChildNodeEvent: ' + '传值至父组件')
+      var _this = this
+      if (nodes.length > 0) {
+        _this.resourceIds = ''
+        for (var i = 0; i < nodes.length; i++) {
+          _this.roleIds = _this.roleIds + nodes[i].id + ','
+        }
+        request({
+          url: 'http://10.30.90.45:9991/api/auth/userController/grant',
+          method: 'post',
+          data: Qs.stringify({
+            roleIds: _this.roleIds,
+            ids: _this.item.id + ','
+          })
+        }).then(function(response) {
+          _this.$message({
+            message: '成功: ' + response,
+            type: 'success'
+          })
+          _this.$emit('listenToChildNodeEvent', nodes)
+        }).catch(function(error) {
+          _this.$message({
+            message: '警告:' + error,
+            type: 'warning'
+          })
+        })
+      } else {
+        console.log('直接跑出')
+      }
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
@@ -74,7 +99,16 @@ export default {
       console.log('7===mounted grant resource===')
       console.log('dialogGrantFormVisible: ' + this.dialogGrantFormVisible)
       console.log('jquery之后: ' + this.dialogGrantFormVisible)
-      $.fn.zTree.init($('#treeDemo'), this.setting, this.zNodes)
+      var _this = this
+      request({
+        url: 'http://10.30.90.45:9991/api/auth/roleController/list',
+        method: 'get'
+      }).then(function(response) {
+        _this.zNodes = response.data
+        $.fn.zTree.init($('#treeDemo'), _this.setting, _this.zNodes)
+      }).catch(function(error) {
+        console.log(error)
+      })
     })
   }
 }
