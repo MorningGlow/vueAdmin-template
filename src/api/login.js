@@ -14,7 +14,7 @@ export function login(username, password) {
 
 export function getInfo(token) {
   return request({
-    url: '/user/info',
+    url: 'http://10.30.90.45:9991/api/auth/jwt/userInfo',
     method: 'get',
     params: { token }
   })
@@ -22,7 +22,7 @@ export function getInfo(token) {
 
 export function logout() {
   return request({
-    url: '/user/logout',
+    url: 'http://10.30.90.45:9991/api/auth/jwt/logout',
     method: 'post'
   })
 }

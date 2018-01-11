@@ -47,7 +47,8 @@ const user = {
         getInfo(state.token).then(response => {
           const data = response.data
           commit('SET_ROLES', data.role)
-          commit('SET_NAME', data.name)
+          console.log('data.uniqueName' + data.uniqueName)
+          commit('SET_NAME', data.uniqueName)
           commit('SET_AVATAR', data.avatar)
           resolve(response)
         }).catch(error => {

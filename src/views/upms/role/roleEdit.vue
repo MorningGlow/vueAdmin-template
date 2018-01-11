@@ -77,7 +77,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log(formName)
-          alert('submit!')
           request({
             url: 'http://10.30.90.45:9991/api/auth/roleController/edit',
             method: 'post',

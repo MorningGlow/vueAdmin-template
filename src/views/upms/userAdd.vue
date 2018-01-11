@@ -3,9 +3,9 @@
     <!-- Form -->
     <el-dialog title="添加用户" :visible="dialogFormVisible">
       <el-form :model="item" status-icon :rules="rules" ref="item" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="id" prop="id">
-          <el-input :disabled="true" v-model="item.id"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="id" prop="id">-->
+          <!--<el-input :disabled="false" v-model="item.id"></el-input>-->
+        <!--</el-form-item>-->
         <el-form-item label="用户名" prop="username">
           <el-input v-model="item.username"></el-input>
         </el-form-item>
@@ -15,9 +15,9 @@
         <el-form-item label="密码校验" prop="rePasd">
           <el-input type="password" v-model="item.rePasd"></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="roleNames">
-          <el-input v-model="item.roleNames"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="角色" prop="roleNames">-->
+          <!--<el-input v-model="item.roleNames"></el-input>-->
+        <!--</el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="sendClose()">取 消</el-button>
@@ -28,6 +28,8 @@
 </template>
 <script>
 // import request from '@/utils/request'
+import request from '@/utils/request'
+import Qs from 'qs'
 export default {
   data() {
     var checkAge = (rule, value, callback) => {
@@ -104,10 +106,29 @@ export default {
       console.log(index, row)
     },
     submitForm(formName) {
+      var _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
-          this.$emit('listenToChildEvent')
+          request({
+            url: 'http://10.30.90.45:9991/api/auth/userController/add',
+            method: 'post',
+            data: Qs.stringify({
+              username: _this.item.username,
+              password: _this.item.password
+            })
+          }).then(function(response) {
+            _this.$message({
+              'message': '添加成功!',
+              'type': 'success'
+            })
+            _this.$emit('listenToChildEvent')
+          }).catch(function(error) {
+            _this.$message({
+              'message': '添加失败!' + error,
+              'type': 'warning'
+            })
+          })
+          // this.$emit('listenToChildEvent')
         } else {
           console.log('error submit!!')
           return false

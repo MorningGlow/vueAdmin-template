@@ -109,9 +109,17 @@ export default {
         method: 'delete'
       }).then(function(response) {
         console.log(response)
+        _this.$message({
+          message: '删除成功,正在重新刷新页面1',
+          type: 'success'
+        })
         _this.handleCurrentChange(1)
       }).catch(function(error) {
         console.log(error)
+        _this.$message({
+          message: '删除失败!: ' + error,
+          type: 'warning'
+        })
       })
     },
     handleAdd(index, row) {

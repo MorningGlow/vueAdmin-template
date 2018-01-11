@@ -40,6 +40,7 @@ export default {
         }},
       zNodes: [
       ],
+      zNodesByRole: [],
       ids: '',
       roleIds: ''
     }
@@ -101,10 +102,39 @@ export default {
       console.log('jquery之后: ' + this.dialogGrantFormVisible)
       var _this = this
       request({
+        url: 'http://10.30.90.45:9991/api/auth/userController/getOne',
+        method: 'get',
+        params: {
+          id: _this.item.id
+        }
+      }).then(function(response) {
+        _this.$message({
+          message: '获取成功: ' + response,
+          type: 'success'
+        })
+        console.log('response.data: ' + response.data)
+        if (response.data !== null) {
+          _this.zNodesByRole = response.data
+        }
+      }).catch(function(error) {
+        _this.$message({
+          message: '警告:' + error,
+          type: 'warning'
+        })
+        console.log(error)
+      })
+      request({
         url: 'http://10.30.90.45:9991/api/auth/roleController/list',
         method: 'get'
       }).then(function(response) {
         _this.zNodes = response.data
+        for (var i = 0; i < _this.zNodesByRole.length; i++) {
+          for (var j = 0; j < _this.zNodes.length; j++) {
+            if (_this.zNodesByRole[i].id === _this.zNodes[j].id) {
+              _this.zNodes[j].checked = true
+            }
+          }
+        }
         $.fn.zTree.init($('#treeDemo'), _this.setting, _this.zNodes)
       }).catch(function(error) {
         console.log(error)

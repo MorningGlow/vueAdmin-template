@@ -39,14 +39,8 @@ export default {
           enable: false
         }},
       zNodes: [
-        { id: '1', pid: '', name: '[core] 基本功能 演示', open: true },
-        { id: '123345555', pid: '1', name: '用户增加权限' },
-        { id: '城标东奔西走要', pid: '1', name: '天地六合' },
-        { id: '3', pid: '', name: '神一般的名字' },
-        { id: '4', pid: '3', name: '不显示 节点 图标' },
-        { id: 108, pid: 4, name: '异步加载 节点数据' },
-        { id: 109, pid: 1, name: '用 zTree 方法 异步加载 节点数据' }
       ],
+      zNodesByRole: [],
       resourceIds: '',
       id: ''
     }
@@ -107,11 +101,39 @@ export default {
       console.log('dialogGrantFormVisible: ' + this.dialogGrantFormVisible)
       console.log('jquery之后: ' + this.dialogGrantFormVisible)
       var _this = this
+
+      request({
+        url: 'http://10.30.90.45:9991/api/auth/roleController/getOne',
+        method: 'get',
+        params: {
+          id: _this.item.id
+        }
+      }).then(function(response) {
+        _this.$message({
+          message: '获取成功: ' + response,
+          type: 'success'
+        })
+        console.log('response.data: ' + response.data)
+        _this.zNodesByRole = response.data
+      }).catch(function(error) {
+        _this.$message({
+          message: '警告:' + error,
+          type: 'warning'
+        })
+        console.log(error)
+      })
       request({
         url: 'http://10.30.90.45:9991/api/auth/resource/',
         method: 'get'
       }).then(function(response) {
         _this.zNodes = response.data.rows
+        for (var i = 0; i < _this.zNodesByRole.length; i++) {
+          for (var j = 0; j < _this.zNodes.length; j++) {
+            if (_this.zNodesByRole[i].id === _this.zNodes[j].id) {
+              _this.zNodes[j].checked = true
+            }
+          }
+        }
         $.fn.zTree.init($('#treeDemo'), _this.setting, _this.zNodes)
       }).catch(function(error) {
         console.log(error)

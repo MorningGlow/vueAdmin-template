@@ -25,7 +25,7 @@
             <span style="margin-left: 10px">{{ scope.row.username }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="密码" width="60">
+        <el-table-column label="密码" width="65">
           <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.password |formatPsd }}</span>
           </template>
@@ -109,7 +109,27 @@ export default {
       console.log('dialogEditFormVisible:' + this.dialogEditFormVisible)
     },
     handleDelete(index, row) {
-      console.log(index, row)
+      var _this = this
+      request({
+        url: 'http://10.30.90.45:9991/api/auth/userController/delete',
+        method: 'delete',
+        params: {
+          id: row.id
+        }
+      }).then(function(response) {
+        _this.$message({
+          message: '删除成功: ' + response,
+          type: 'success'
+        })
+        // _this.handleList(_this.currentPage, _this.pageSize)
+        _this.handleCurrentChange(1)
+      }).catch(function(error) {
+        console.log(error)
+        _this.$message({
+          message: '警告:' + error,
+          type: 'warning'
+        })
+      })
     },
     handleAdd(index, row) {
       console.log(index, row)
@@ -123,12 +143,14 @@ export default {
     handleClose() {
       this.dialogFormVisible = false
       this.dialogEditFormVisible = false
+      this.handleCurrentChange(1)
       console.log('close dialogFormVisible:' + this.dialogFormVisible)
     },
     handleCloseGrant(nodes) {
       var _this = this
       _this.dialogGrantFormVisible = false
       // _this.handleList(_this.currentPage, _this.pageSize)
+      _this.handleCurrentChange(1)
       console.log('从子组件获得 qwq nodes: ' + nodes)
     },
     handleList(currentPage, pageSize) {
