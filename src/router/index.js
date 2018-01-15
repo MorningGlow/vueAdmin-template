@@ -102,8 +102,25 @@ export const constantRouterMap = [
 ]
 
 export default new Router({
-  // mode: 'history', //后端支持可开
+  mode: 'history', // 后端支持可开
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
+
+// 异步挂载的路由 动态需要根据权限加载的路由表
+export const asyncRouterMap = [
+  {
+    path: '/permission',
+    component: Layout,
+    name: 'kafka日志测试',
+    meta: { role: ['log/kafka/'] }, // kafka日志测试
+    children: [
+      {
+        path: 'index',
+        component: _import('kafka/index'),
+        name: 'kafka日志测试',
+        meta: { role: ['log/kafka/'] } // kafka日志测试
+      }]
+  }
+]
 
