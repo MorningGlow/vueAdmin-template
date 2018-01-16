@@ -12,18 +12,23 @@ function hasPermission(roles, route) {
 const permission = {
   state: {
     routers: constantRouterMap,
-    addRouters: []
+    addRouters: [],
+    resources: []
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
+    },
+    SET_RESOURCES: (state, resources) => {
+      state.resources = resources
     }
   },
   actions: {
     GenerateRoutes({ commit }, data) {
       return new Promise(resolve => {
         const { roles } = data
+        commit('SET_RESOURCES', roles)
         const accessedRouters = asyncRouterMap.filter(v => {
           if (roles.indexOf('admin') >= 0) return true
           if (hasPermission(roles, v)) {

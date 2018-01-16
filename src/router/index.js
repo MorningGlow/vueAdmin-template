@@ -59,33 +59,6 @@ export const constantRouterMap = [
     ]
   },
   {
-    path: '/upms',
-    component: Layout,
-    redirect: '/upms/user',
-    name: 'upms',
-    meta: { title: 'upms', icon: 'table' },
-    children: [
-      {
-        path: 'user',
-        name: '用户',
-        component: user,
-        meta: { title: '用户', icon: 'table' }
-      },
-      {
-        path: 'role',
-        name: 'role',
-        component: role,
-        meta: { title: '角色', icon: 'tree' }
-      },
-      {
-        path: 'resource',
-        name: 'resource',
-        component: resource,
-        meta: { title: '资源', icon: 'tree' }
-      }
-    ]
-  },
-  {
     path: '/form',
     component: Layout,
     children: [
@@ -108,20 +81,47 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/log/kafka/',
     name: 'kafka日志',
-    meta: { title: 'kafka日志', icon: 'table', role: ['log/kafka/'] }, // kafka日志测试
+    meta: { title: 'kafka日志', icon: 'table', role: ['/log/kafka/'] }, // kafka日志测试
     children: [
       {
         path: '/kafka/',
         component: _import('kafka/index'),
         name: 'kafka日志测试',
-        meta: { title: 'kafka日志测试', icon: 'tree', role: ['log/kafka/'] } // kafka日志测试
+        meta: { title: 'kafka日志测试', icon: 'tree', role: ['/log/kafka/'] } // kafka日志测试
       },
       {
         path: '/kafka/',
         component: _import('kafka/index'),
         name: 'kafka日志测试2',
-        meta: { title: 'kafka日志测试3', icon: 'tree', role: ['log/kafka/'] } // kafka日志测试
+        meta: { title: 'kafka日志测试3', icon: 'tree', role: ['/log/kafka/'] } // kafka日志测试
       }]
+  },
+  {
+    path: '/upms',
+    component: Layout,
+    redirect: '/upms/user',
+    name: 'upms',
+    meta: { title: 'upms', icon: 'table', role: ['/upms/user'] },
+    children: [
+      {
+        path: 'user',
+        name: '用户',
+        component: user,
+        meta: { title: '用户', icon: 'table', role: ['/upms/user'] }
+      },
+      {
+        path: 'role',
+        name: 'role',
+        component: role,
+        meta: { title: '角色', icon: 'tree', role: ['/upms/role'] }
+      },
+      {
+        path: 'resource',
+        name: 'resource',
+        component: resource,
+        meta: { title: '资源', icon: 'tree', role: ['/upms/resource'] }
+      }
+    ]
   }
 ]
 

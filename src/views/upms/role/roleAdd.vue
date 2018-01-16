@@ -3,9 +3,9 @@
     <!-- Form -->
     <el-dialog title="添加角色" :visible="dialogFormVisible">
       <el-form :model="item" status-icon :rules="rules" ref="item" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="id" prop="id">
-          <el-input :disabled="false" v-model="item.id"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="id" prop="id">-->
+          <!--<el-input :disabled="false" v-model="item.id"></el-input>-->
+        <!--</el-form-item>-->
         <el-form-item label="角色" prop="name">
           <el-input v-model="item.name"></el-input>
         </el-form-item>

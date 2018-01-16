@@ -24,12 +24,22 @@ router.beforeEach((to, from, next) => {
               console.log('判断是0' + store.getters.addRouters)
               router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
               console.log('判断是2' + store.getters.routers)
+              console.log('判断是33' + store.getters.resources)
+              // console.log('判断是33' + store.getters.resources)
+              store.getters.resources.forEach(resource => {
+                console.log('判断是33' + resource)
+              })
               store.getters.routers.forEach(router => {
                 console.log(router.name)
               })
             }
+
+            if (roles.length === 0) {
+              next()
+            } else {
+              next({ ...to }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+            }
             // next()
-            next({ ...to }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           })
         }).catch(err => {
           // console.log(err)

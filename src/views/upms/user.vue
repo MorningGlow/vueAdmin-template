@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <div style="margin-left: 5px">
-        <el-button size="mini" type="danger" @click="handleAdd()">增加</el-button>
+        <el-button size="mini" v-if="isAdd"  type="danger" @click="handleAdd()">增加</el-button>
       </div>
     </el-row>
 
@@ -49,8 +49,8 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" v-if="isEdit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" v-if="isDelete" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             <!--<el-button size="mini" type="danger" @click="handleAdd(scope.$index, scope.row)">增加</el-button>-->
             <el-button size="mini" type="danger" @click="handleGrant(scope.$index, scope.row)">授权</el-button>
           </template>
@@ -79,6 +79,7 @@ import request from '@/utils/request'
 import userEdit from './userEdit'
 import userAdd from './userAdd'
 import grant from './grantRole'
+import store from '../../store'
 export default {
   data() {
     return {
@@ -89,7 +90,11 @@ export default {
       dialogFormVisible: false,
       dialogEditFormVisible: false,
       dialogGrantFormVisible: false,
-      item: {}
+      item: {},
+      resources: store.getters.resources,
+      isAdd: false,
+      isDelete: false,
+      isEdit: false
     }
   },
   methods: {
@@ -248,6 +253,26 @@ export default {
       // 代码保证 this.$el 在 document 中
       console.log('7===mounted===')
       var _this = this
+      // store.getters.resources.forEach(resource => {
+      //   console.log('判断是33' + resource)
+      // }).forEach(resource => {
+
+      // })
+      console.log('判断是33' + store.getters.resources)
+      console.log('判断是33' + store.getters.resources.length)
+      store.getters.resources.forEach(resource => {
+        console.log('44' + resource)
+        console.log('roles' + resource)
+        if (resource === 'userController/add') {
+          _this.isAdd = true
+        }
+        if (resource === 'userController/edit') {
+          _this.isEdit = true
+        }
+        if (resource === 'userController/delete') {
+          _this.isDelete = true
+        }
+      })
       _this.handleList(_this.currentPage, _this.pageSize)
     })
   },

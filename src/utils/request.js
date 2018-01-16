@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
   baseURL: '',
-  timeout: 15000 // 请求超时时间
+  timeout: 5000 // 请求超时时间
   // transformRequest: [function(data) {
   //   return qs.stringify(data)
   // }]
@@ -41,7 +41,7 @@ service.interceptors.response.use(
       })
 
       // 401001:非法的token; 401002:其他客户端登录了;  401003:Token 过期了;
-      if (res.status === 401001 || res.status === 401002 || res.status === 401003) {
+      if (res.status === 401001 || res.status === 401002 || res.status === 401003 || res.status === 500) {
         MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',

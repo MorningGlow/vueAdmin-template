@@ -6,9 +6,6 @@
       <el-row :gutter="5">
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12"><div >
           <el-form :model="item" status-icon :rules="rules" ref="item" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="id" prop="id">
-              <el-input :disabled="false" v-model="item.id"></el-input>
-            </el-form-item>
             <el-form-item label="资源" prop="name">
               <el-input v-model="item.name"></el-input>
             </el-form-item>
@@ -26,6 +23,9 @@
                 <el-option label="upms" value="1"></el-option>
                 <el-option label="排程" value="2"></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="url" prop="url">
+              <el-input :disabled="false" v-model="item.url"></el-input>
             </el-form-item>
             <el-form-item label="描述" prop="remark">
               <el-input v-model="item.remark"></el-input>
@@ -102,13 +102,14 @@ export default {
       item: {
         id: '',
         name: '',
-        pid: '',
+        pid: null,
         pname: '',
         remark: '',
         sysId: '',
         typeId: '',
         sysName: '',
-        typeName: ''
+        typeName: '',
+        url: ''
       },
       dialogTableVisible: false,
       dialogVisible: false,
@@ -172,7 +173,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log(formName)
-          alert('submit!')
+          // alert('submit!')
           request({
             url: 'http://10.30.90.45:9991/api/auth/resource/',
             method: 'post',
@@ -183,6 +184,7 @@ export default {
               remark: _this.item.remark,
               typeId: _this.item.typeId,
               sysId: _this.item.sysId,
+              url: _this.item.url,
               pid: _this.item.pid
             })
           }).then(function(response) {
