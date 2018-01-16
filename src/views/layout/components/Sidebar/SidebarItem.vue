@@ -28,6 +28,8 @@
       </el-submenu>
 
     </template>
+
+    <!--<div>{{routes}}}</div>-->
   </div>
 </template>
 

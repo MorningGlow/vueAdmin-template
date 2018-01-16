@@ -42,6 +42,7 @@ const permission = {
           return false
         })
         console.log('promise添加的routers:' + accessedRouters)
+        // console.log('判断是1' + permission.state.routers)
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })

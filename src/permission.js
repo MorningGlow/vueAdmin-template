@@ -16,16 +16,20 @@ router.beforeEach((to, from, next) => {
       if (store.getters.resources.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetInfo').then(res => { // 拉取info
           const roles = res.data.resource
+          console.log(roles.length)
           store.dispatch('GenerateRoutes', { roles }).then(() => { // 生成可访问的路由表
-            console.log('添加的routers:' + store.getters.addRouters)
             if (store.getters.addRouters === undefined) {
-              console.log('判断是undefined' + store.getters.addRouters)
+              console.log('判断' + store.getters.addRouters)
             } else {
-              console.log('判断是' + store.getters.addRouters)
+              console.log('判断是0' + store.getters.addRouters)
               router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+              console.log('判断是2' + store.getters.routers)
+              store.getters.routers.forEach(router => {
+                console.log(router.name)
+              })
             }
-            next()
-            // next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+            // next()
+            next({ ...to }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           })
         }).catch(err => {
           // console.log(err)
