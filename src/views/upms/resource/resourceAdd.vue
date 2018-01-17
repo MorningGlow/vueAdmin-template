@@ -142,7 +142,7 @@ export default {
         },
         check: {
           enable: true,
-          chkboxType: { 'Y': 's', 'N': 's' }
+          chkboxType: { 'Y': '', 'N': 's' }
         },
         data: {
           simpleData: {

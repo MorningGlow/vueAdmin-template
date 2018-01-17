@@ -1,21 +1,21 @@
 <template>
-  <div>
+  <div class="app-container">
     <el-row>
-      <div style="margin-left: 5px">
+      <div style="margin-bottom: 20px">
         <el-button size="mini" v-if="isAdd"  type="danger" @click="handleAdd()">增加</el-button>
       </div>
     </el-row>
 
     <el-row>
-      <el-table :data="tableData" ref="multipleTable"
+      <el-table :data="tableData" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
+                style="width: 100%" ref="multipleTable"
                 tooltip-effect="dark"
-                highlight-current-row
                 @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
           width="55">
         </el-table-column>
-        <el-table-column label="ID" width="200">
+        <el-table-column label="ID" width="170">
           <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.id }}</span>
           </template>
@@ -56,7 +56,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="block">
+      <div v-show="!listLoading" class="pagination-container">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -94,7 +94,8 @@ export default {
       resources: store.getters.resources,
       isAdd: false,
       isDelete: false,
-      isEdit: false
+      isEdit: false,
+      listLoading: true
     }
   },
   methods: {
@@ -160,6 +161,7 @@ export default {
     },
     handleList(currentPage, pageSize) {
       var _this = this
+      _this.listLoading = true
       console.log('currentPage:' + currentPage + 'pageSize:' + pageSize)
       if (currentPage === 0) {
         currentPage = 1
@@ -178,8 +180,10 @@ export default {
         console.log(response)
         _this.tableData = response.data
         _this.total = response.count
+        _this.listLoading = false
         console.log('tableData:' + _this.tableData)
       }).catch(function(error) {
+        _this.listLoading = false
         console.log(error)
       })
     },
@@ -253,13 +257,6 @@ export default {
       // 代码保证 this.$el 在 document 中
       console.log('7===mounted===')
       var _this = this
-      // store.getters.resources.forEach(resource => {
-      //   console.log('判断是33' + resource)
-      // }).forEach(resource => {
-
-      // })
-      console.log('判断是33' + store.getters.resources)
-      console.log('判断是33' + store.getters.resources.length)
       store.getters.resources.forEach(resource => {
         console.log('44' + resource)
         console.log('roles' + resource)

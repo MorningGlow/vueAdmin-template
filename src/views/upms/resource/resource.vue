@@ -1,69 +1,77 @@
 <template>
-  <div>
-    <el-table :data="tableData" ref="multipleTable"
-              tooltip-effect="dark"
-              highlight-current-row
-              @selection-change="handleSelectionChange">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column label="ID" width="180">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="资源名" width="120">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="父级资源" width="100">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.pname }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="url" width="190">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.url }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="资源类型" width="100">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.typeName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="系统名称" width="100">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.sysName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="描述" width="180">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.remark }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          <el-button size="mini" type="danger" @click="handleAdd(scope.$index, scope.row)">增加</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[7, 10, 15, 20]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
-      </el-pagination>
-    </div>
-    <edit :item="item" :dialogEditFormVisible="dialogEditFormVisible" v-if="dialogEditFormVisible" v-on:listenToChildEvent="handleClose"></edit>
-    <add v-bind:dialogFormVisible="dialogFormVisible" v-if="dialogFormVisible" v-on:listenToChildEvent="handleClose"></add>
+  <div class="app-container">
+    <el-row>
+      <div style="margin-bottom: 20px">
+        <el-button size="mini" type="danger" @click="handleAdd()">增加</el-button>
+      </div>
+    </el-row>
+    <el-row>
+      <el-table :data="tableData" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
+                style="width: 100%" ref="multipleTable"
+                tooltip-effect="dark"
+                @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column label="ID" width="170">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="资源名" width="120">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="父级资源" width="100">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.pname }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="url" width="170">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.url }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="资源类型" width="100">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.typeName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="系统名称" width="100">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.sysName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="描述" width="180">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.remark }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <!--<el-button size="mini" type="danger" @click="handleAdd(scope.$index, scope.row)">增加</el-button>-->
+          </template>
+        </el-table-column>
+      </el-table>
+      <div v-show="!listLoading" class="pagination-container">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[7, 10, 15, 20]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div>
+      <edit :item="item" :dialogEditFormVisible="dialogEditFormVisible" v-if="dialogEditFormVisible" v-on:listenToChildEvent="handleClose"></edit>
+      <add v-bind:dialogFormVisible="dialogFormVisible" v-if="dialogFormVisible" v-on:listenToChildEvent="handleClose"></add>
+    </el-row>
+
   </div>
 </template>
 <script>
@@ -82,7 +90,8 @@ export default {
       tableData: [],
       dialogFormVisible: false,
       dialogEditFormVisible: false,
-      item: {}
+      item: {},
+      listLoading: true
     }
   },
   methods: {
@@ -137,6 +146,7 @@ export default {
     handleList(currentPage, pageSize) {
       var _this = this
       console.log('currentPage:' + currentPage + 'pageSize:' + pageSize)
+      _this.listLoading = true
       if (currentPage === 0) {
         currentPage = 1
       }
@@ -154,8 +164,10 @@ export default {
         console.log(response)
         _this.tableData = response.data.rows
         _this.total = response.data.total
+        _this.listLoading = false
         console.log('tableData:' + _this.tableData.toString())
       }).catch(function(error) {
+        _this.listLoading = false
         console.log(error)
       })
     },

@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <!-- Form -->
     <el-dialog title="编辑资源" :visible="dialogEditFormVisible">
       <el-row :gutter="5">
@@ -26,6 +25,9 @@
                 <el-option label="upms" value="1"></el-option>
                 <el-option label="排程" value="2"></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="url" prop="url">
+              <el-input :disabled="false" v-model="item.url"></el-input>
             </el-form-item>
             <el-form-item label="描述" prop="remark">
               <el-input v-model="item.remark"></el-input>
@@ -101,7 +103,7 @@ export default {
         },
         check: {
           enable: true,
-          chkboxType: { 'Y': 's', 'N': 'ps' }
+          chkboxType: { 'Y': '', 'N': 's' }
         },
         data: {
           simpleData: {
@@ -140,7 +142,8 @@ export default {
               remark: _this.item.remark,
               typeId: _this.item.typeId,
               sysId: _this.item.sysId,
-              pid: _this.item.pid
+              pid: _this.item.pid,
+              url: _this.item.url
             })
           }).then(function(response) {
             console.log(response + '下面执行向父组件提交变化')
