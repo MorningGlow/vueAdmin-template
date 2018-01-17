@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row>
       <div style="margin-bottom: 20px">
-        <el-button size="mini" type="danger" @click="handleAdd()">增加</el-button>
+        <el-button size="mini" v-if="isAdd" type="primary" @click="handleAdd()">增加</el-button>
       </div>
     </el-row>
     <el-row>
@@ -51,8 +51,8 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" v-if="isEdit" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" v-if="isDelete" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             <!--<el-button size="mini" type="danger" @click="handleAdd(scope.$index, scope.row)">增加</el-button>-->
           </template>
         </el-table-column>
@@ -76,11 +76,9 @@
 </template>
 <script>
 import request from '@/utils/request'
-// import $ from 'jquery'
-// import ztree from 'ztree'
-// import Qs from 'qs'
 import Edit from './resourceEdit'
 import Add from './resourceAdd'
+import store from '../../../store'
 export default {
   data() {
     return {
@@ -91,6 +89,9 @@ export default {
       dialogFormVisible: false,
       dialogEditFormVisible: false,
       item: {},
+      isAdd: false,
+      isDelete: false,
+      isEdit: false,
       listLoading: true
     }
   },
@@ -111,42 +112,59 @@ export default {
       console.log('dialogEditFormVisible:' + this.dialogEditFormVisible)
     },
     handleDelete(index, row) {
-      console.log(index, row)
       var _this = this
-      request({
-        url: 'http://10.30.90.45:9991/api/auth/resource/' + row.id,
-        method: 'delete'
-      }).then(function(response) {
-        console.log(response)
-        _this.$message({
-          message: '删除成功,正在重新刷新页面1',
-          type: 'success'
+      _this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        request({
+          url: 'http://10.30.90.45:9991/api/auth/resource/' + row.id,
+          method: 'delete'
+        }).then(function(response) {
+          _this.$message({
+            message: '删除成功,正在重新刷新页面1',
+            type: 'success'
+          })
+          _this.handleCurrentChange(1)
+        }).catch(function(error) {
+          _this.$message({
+            message: '删除失败!: ' + error,
+            type: 'warning'
+          })
         })
-        _this.handleCurrentChange(1)
-      }).catch(function(error) {
-        console.log(error)
+      }).catch(() => {
         _this.$message({
-          message: '删除失败!: ' + error,
-          type: 'warning'
+          type: 'info',
+          message: '已取消删除'
         })
       })
     },
     handleAdd(index, row) {
-      console.log(index, row)
       this.dialogFormVisible = true
     },
     handleClose() {
       this.dialogFormVisible = false
       this.dialogEditFormVisible = false
-      console.log('close dialogFormVisible:' + this.dialogFormVisible)
-      console.log('close dialogEditFormVisible:' + this.dialogEditFormVisible)
       var _this = this
       _this.handleList(_this.currentPage, _this.pageSize)
     },
     handleList(currentPage, pageSize) {
       var _this = this
-      console.log('currentPage:' + currentPage + 'pageSize:' + pageSize)
       _this.listLoading = true
+      store.getters.resources.forEach(resource => {
+        console.log('44' + resource)
+        console.log('roles' + resource)
+        if (resource === 'resource/add') {
+          _this.isAdd = true
+        }
+        if (resource === 'resource/edit') {
+          _this.isEdit = true
+        }
+        if (resource === 'resource/delete') {
+          _this.isDelete = true
+        }
+      })
       if (currentPage === 0) {
         currentPage = 1
       }
@@ -161,14 +179,12 @@ export default {
           limit: pageSize
         }
       }).then(function(response) {
-        console.log(response)
         _this.tableData = response.data.rows
         _this.total = response.data.total
         _this.listLoading = false
-        console.log('tableData:' + _this.tableData.toString())
       }).catch(function(error) {
-        _this.listLoading = false
         console.log(error)
+        _this.listLoading = false
       })
     },
     toggleSelection(rows) {

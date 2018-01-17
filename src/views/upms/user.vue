@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row>
       <div style="margin-bottom: 20px">
-        <el-button size="mini" v-if="isAdd"  type="danger" @click="handleAdd()">增加</el-button>
+        <el-button size="mini" v-if="isAdd"  type="primary" @click="handleAdd()">增加</el-button>
       </div>
     </el-row>
 
@@ -91,10 +91,10 @@ export default {
       dialogEditFormVisible: false,
       dialogGrantFormVisible: false,
       item: {},
-      resources: store.getters.resources,
       isAdd: false,
       isDelete: false,
       isEdit: false,
+      isGrant: false,
       listLoading: true
     }
   },
@@ -268,6 +268,9 @@ export default {
         }
         if (resource === 'userController/delete') {
           _this.isDelete = true
+        }
+        if (resource === 'userController/grant') {
+          _this.isGrant = true
         }
       })
       _this.handleList(_this.currentPage, _this.pageSize)

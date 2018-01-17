@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row>
       <div style="margin-bottom: 20px">
-        <el-button size="mini" type="danger" @click="handleAdd()">增加</el-button>
+        <el-button size="mini" type="primary" v-if="isAdd" @click="handleAdd()">增加</el-button>
       </div>
     </el-row>
 
@@ -42,10 +42,10 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" v-if="isEdit" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" v-if="isDelete" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             <!--<el-button size="mini" type="danger" @click="handleAdd(scope.$index, scope.row)">增加</el-button>-->
-            <el-button size="mini" type="danger" @click="handleGrant(scope.$index, scope.row)">授权</el-button>
+            <el-button size="mini" v-if="isGrant" type="danger" @click="handleGrant(scope.$index, scope.row)">授权</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -73,6 +73,7 @@ import request from '@/utils/request'
 import Edit from './roleEdit'
 import Add from './roleAdd'
 import Grant from './grantResource'
+import store from '../../../store'
 export default {
   data() {
     return {
@@ -85,6 +86,10 @@ export default {
       dialogGrantFormVisible: false,
       item: {},
       nodes: [],
+      isAdd: false,
+      isDelete: false,
+      isEdit: false,
+      isGrant: false,
       listLoading: true
     }
   },
@@ -148,6 +153,22 @@ export default {
       var _this = this
       console.log('currentPage:' + currentPage + 'pageSize:' + pageSize)
       _this.listLoading = true
+      store.getters.resources.forEach(resource => {
+        console.log('44' + resource)
+        console.log('roles' + resource)
+        if (resource === 'roleController/add') {
+          _this.isAdd = true
+        }
+        if (resource === 'roleController/edit') {
+          _this.isEdit = true
+        }
+        if (resource === 'roleController/delete') {
+          _this.isDelete = true
+        }
+        if (resource === 'roleController/grant') {
+          _this.isGrant = true
+        }
+      })
       if (currentPage === 0) {
         currentPage = 1
       }
