@@ -69,9 +69,7 @@ export const constantRouterMap = [
         meta: { title: 'Form', icon: 'form' }
       }
     ]
-  },
-
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 // 异步挂载的路由 动态需要根据权限加载的路由表
@@ -122,7 +120,8 @@ export const asyncRouterMap = [
         meta: { title: '资源', icon: 'tree', role: ['/upms/resource'] }
       }
     ]
-  }
+  },
+  { path: '*', redirect: '/404', hidden: true } // 必需放在所有的router之后，被坑的不行
 ]
 
 export default new Router({
