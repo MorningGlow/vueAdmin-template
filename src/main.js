@@ -14,9 +14,10 @@ import store from './store'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import vueWaves from './directive/waves'// 水波纹指令
 
 Vue.use(ElementUI, { locale })
-
+Vue.use(vueWaves)
 Vue.config.productionTip = false
 
 new Vue({

@@ -11,6 +11,7 @@ import Layout from '../views/layout/Layout'
 import resource from '../views/upms/resource/resource'
 import role from '../views/upms/role/role'
 import user from '../views/upms/user'
+// import user2 from '../views/yun/user'
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -118,6 +119,33 @@ export const asyncRouterMap = [
         name: 'resource',
         component: resource,
         meta: { title: '资源', icon: 'tree', role: ['/upms/resource'] }
+      }
+    ]
+  },
+  {
+    path: '/yun',
+    component: Layout,
+    redirect: '/yun/user',
+    name: 'yun',
+    meta: { title: 'yun', icon: 'table' },
+    children: [
+      {
+        path: 'user',
+        name: '用户',
+        component: _import('yun/user/index'),
+        meta: { title: '用户2', icon: 'table' }
+      },
+      {
+        path: 'globalt',
+        name: 'globalt',
+        component: _import('yun/globalt/index'),
+        meta: { title: 'globalt', icon: 'tree' }
+      },
+      {
+        path: 'crmMember',
+        name: 'crmMember',
+        component: _import('yun/crmMember/index'),
+        meta: { title: 'globalt', icon: 'tree' }
       }
     ]
   },
