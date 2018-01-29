@@ -145,7 +145,7 @@ export const asyncRouterMap = [
         path: 'crmMember',
         name: 'crmMember',
         component: _import('yun/crmMember/index'),
-        meta: { title: 'globalt', icon: 'tree' }
+        meta: { title: 'crmMember', icon: 'tree' }
       }
     ]
   },

@@ -16,7 +16,7 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="">
+      <el-table-column width="200px" align="center" label="名称">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>

@@ -16,42 +16,42 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="">
+      <el-table-column width="200px" align="center" label="密码">
         <template slot-scope="scope">
           <span>{{scope.row.password}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="">
+      <el-table-column width="200px" align="center" label="用户名称">
         <template slot-scope="scope">
           <span>{{scope.row.userName}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="">
+      <el-table-column width="200px" align="center" label="状态">
         <template slot-scope="scope">
           <span>{{scope.row.status}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="">
+      <el-table-column width="200px" align="center" label="邮箱">
         <template slot-scope="scope">
           <span>{{scope.row.email}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="">
+      <el-table-column width="200px" align="center" label="性别">
         <template slot-scope="scope">
           <span>{{scope.row.gender}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="">
+      <el-table-column width="200px" align="center" label="入职时间">
         <template slot-scope="scope">
           <span>{{scope.row.hiredate}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="">
+      <el-table-column width="200px" align="center" label="真实姓名">
         <template slot-scope="scope">
           <span>{{scope.row.realName}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="">
+      <el-table-column width="200px" align="center" label="手机号码">
         <template slot-scope="scope">
           <span>{{scope.row.telephone}}</span>
         </template>
