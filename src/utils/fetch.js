@@ -2,11 +2,15 @@ import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
+import qs from 'qs'
 
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
-  timeout: 5000 // 请求超时时间
+  timeout: 5000, // 请求超时时间
+  transformRequest: [function(data) {
+    return qs.stringify(data)
+  }]
 })
 
 // request拦截器
