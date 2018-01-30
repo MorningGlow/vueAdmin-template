@@ -11,7 +11,7 @@
     <el-table :key='tableKey' :data="list" v-loading.body="listLoading" border fit highlight-current-row
               style="width: 100%">
 
-      <el-table-column align="center" label="id" width="65">
+      <el-table-column align="center" label="id" width="290">
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
         </template>
@@ -224,3 +224,10 @@
     }
   }
 </script>
+
+<style type="text/css">
+  is-hidden{
+    visibility: hidden;
+    display: none;
+  }
+</style>

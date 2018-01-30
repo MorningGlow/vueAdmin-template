@@ -8,15 +8,15 @@
                  type="primary" icon="edit">添加
       </el-button>
     </div>
-    <el-table :key='tableKey' :data="list" v-loading.body="listLoading" border fit highlight-current-row
+    <el-table :key='tableKey' :data="list"  v-loading.body="listLoading" border fit highlight-current-row
               style="width: 100%">
 
-      <el-table-column align="center" label="id" width="65">
+      <el-table-column align="center" label="id" min-width="290px">
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="名称">
+      <el-table-column min-width="200px" align="center" label="名称">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>
@@ -87,7 +87,7 @@
         listLoading: true,
         listQuery: {
           page: 1,
-          limit: 20,
+          limit: 10,
           name: undefined
         },
         dialogFormVisible: false,
@@ -163,6 +163,7 @@
                 })
                 const index = this.list.indexOf(row)
                 this.list.splice(index, 1)
+                this.total = this.total - 1
               })
           })
       },

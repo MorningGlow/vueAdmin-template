@@ -8,10 +8,10 @@
                  type="primary" icon="edit">添加
       </el-button>
     </div>
-    <el-table :key='tableKey' :data="list" v-loading.body="listLoading" border fit highlight-current-row
+    <el-table :key='tableKey' :data="list"  v-loading.body="listLoading" border fit highlight-current-row
               style="width: 100%">
 
-      <el-table-column align="center" label="id" width="65">
+      <el-table-column fixed align="center" label="id" width="290">
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
         </template>
@@ -56,7 +56,7 @@
           <span>{{scope.row.telephone}}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="操作" width="150">
+      <el-table-column  fixed="right" align="center" label="操作" width="150">
         <template slot-scope="scope">
           <el-button v-if="crmMemberManager_btn_edit" size="small" type="success" @click="handleUpdate(scope.row)">编辑
           </el-button>
