@@ -1,100 +1,98 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px" class="filter-item" placeholder="姓名或账户"
-                v-model="listQuery.name"></el-input>
-      <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" v-if="crmMemberManager_btn_add" style="margin-left: 10px" @click="handleCreate"
-                 type="primary" icon="edit">添加
-      </el-button>
+
+      <el-row :gutter="10">
+        <el-col :span="4.5">
+          <el-input @keyup.enter.native="handleFilter" style="width: 200px" class="filter-item" placeholder="名称"
+                    v-model="listQuery.name">
+          </el-input>
+        </el-col>
+        <el-col :span="8.5">
+          <div>
+            <!--<span class="demonstration">带快捷选项</span>-->
+            <el-date-picker
+              v-model="value4"
+              type="datetimerange"
+              :picker-options="pickerOptions2"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              align="left">
+            </el-date-picker>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
+          <el-button class="filter-item" v-if="careManager_btn_add" style="margin-left: 10px" @click="handleCreate"
+                     type="primary" icon="edit">添加
+          </el-button>
+          <el-button class="filter-item" v-if="careManager_btn_add" style="margin-left: 10px" @click="handleTest"
+                     type="primary" icon="edit">测试
+          </el-button>
+        </el-col>
+      </el-row>
+
+
     </div>
-    <el-table :key='tableKey' :data="list"  v-loading.body="listLoading" border max-height="50px" fit highlight-current-row
+    <el-table :key='tableKey' :data="list" v-loading.body="listLoading" border fit highlight-current-row
               style="width: 100%">
 
-      <el-table-column fixed align="center" label="id" width="290">
+      <el-table-column align="center" label="ID" min-width="290">
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="密码">
+      <el-table-column min-width="200px" align="center" label="名称">
         <template slot-scope="scope">
-          <span>{{scope.row.password}}</span>
+          <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="用户名称">
+      <el-table-column min-width="200px" align="center" label="创建时间">
         <template slot-scope="scope">
-          <span>{{scope.row.userName}}</span>
+          <span>{{scope.row.createdatetime}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="状态">
+      <el-table-column min-width="200px" align="center" label="修改时间">
         <template slot-scope="scope">
-          <span>{{scope.row.status}}</span>
+          <span>{{scope.row.modifydatetime}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="邮箱">
+      <el-table-column min-width="200px" align="center" label="描述">
         <template slot-scope="scope">
-          <span>{{scope.row.email}}</span>
+          <span>{{scope.row.remark}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="性别">
+      <el-table-column min-width="200px" align="center" label="维护类型ID">
         <template slot-scope="scope">
-          <span>{{scope.row.gender}}</span>
+          <span>{{scope.row.caretypeId}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200px" align="center" label="入职时间">
+      <el-table-column fixed="right" align="center" label="操作" width="150">
         <template slot-scope="scope">
-          <span>{{scope.row.hiredate}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="200px" align="center" label="真实姓名">
-        <template slot-scope="scope">
-          <span>{{scope.row.realName}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="200px" align="center" label="手机号码">
-        <template slot-scope="scope">
-          <span>{{scope.row.telephone}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column  fixed="right" align="center" label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button v-if="crmMemberManager_btn_edit" size="small" type="success" @click="handleUpdate(scope.row)">编辑
+          <el-button v-if="careManager_btn_edit" size="small" type="success" @click="handleUpdate(scope.row)">编辑
           </el-button>
-          <el-button v-if="crmMemberManager_btn_del" size="small" type="danger" @click="handleDelete(scope.row)">删除
+          <el-button v-if="careManager_btn_del" size="small" type="danger" @click="handleDelete(scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                     :current-page.sync="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit"
+                     :current-page.sync="listQuery.page" :page-sizes="[5,10,20,30, 50]" :page-size="listQuery.limit"
                      layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form" label-width="100px">
-        <el-form-item label="" prop="password">
-          <el-input v-model="form.password" placeholder="请输入"></el-input>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入名称"></el-input>
         </el-form-item>
-        <el-form-item label="" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入"></el-input>
+        <el-form-item label="描述" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入描述"></el-input>
         </el-form-item>
-        <el-form-item label="" prop="status">
-          <el-input v-model="form.status" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="" prop="email">
-          <el-input v-model="form.email" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="" prop="gender">
-          <el-input v-model="form.gender" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="" prop="hiredate">
-          <el-input v-model="form.hiredate" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="" prop="realName">
-          <el-input v-model="form.realName" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="" prop="telephone">
-          <el-input v-model="form.telephone" placeholder="请输入"></el-input>
+        <el-form-item label="维护类型ID" prop="caretypeId">
+          <el-input v-model="form.caretypeId" placeholder="请输入维护类型ID"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -113,28 +111,55 @@
     getObj,
     delObj,
     putObj
-  } from '../../../api/yun/crmMember/index'
-  import { mapGetters } from 'vuex'
+  } from '../../../api/pollute/care/index'
+  import {
+    mapGetters
+  } from 'vuex'
 
   export default {
-    name: 'crmMember',
+    name: 'care',
     data() {
       return {
+        pickerOptions2: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          }]
+        },
+        value4: '',
         form: {
-          password: undefined,
-          userName: undefined,
-          status: undefined,
-          email: undefined,
-          gender: undefined,
-          hiredate: undefined,
-          realName: undefined,
-          telephone: undefined
+          name: undefined,
+          createdatetime: undefined,
+          modifydatetime: undefined,
+          remark: undefined,
+          caretypeId: undefined
         },
         rules: {
-          password: [
+          name: [
             {
               required: true,
-              message: '请输入',
+              message: '请输入名称',
               trigger: 'blur'
             },
             {
@@ -143,10 +168,10 @@
               message: '长度在 3 到 20 个字符',
               trigger: 'blur'
             }
-          ], userName: [
+          ], createdatetime: [
             {
               required: true,
-              message: '请输入',
+              message: '请输入创建时间',
               trigger: 'blur'
             },
             {
@@ -155,10 +180,10 @@
               message: '长度在 3 到 20 个字符',
               trigger: 'blur'
             }
-          ], status: [
+          ], modifydatetime: [
             {
               required: true,
-              message: '请输入',
+              message: '请输入修改时间',
               trigger: 'blur'
             },
             {
@@ -167,10 +192,10 @@
               message: '长度在 3 到 20 个字符',
               trigger: 'blur'
             }
-          ], email: [
+          ], remark: [
             {
               required: true,
-              message: '请输入',
+              message: '请输入描述',
               trigger: 'blur'
             },
             {
@@ -179,52 +204,16 @@
               message: '长度在 3 到 20 个字符',
               trigger: 'blur'
             }
-          ], gender: [
+          ], caretypeId: [
             {
               required: true,
-              message: '请输入',
+              message: '请输入维护类型ID',
               trigger: 'blur'
             },
             {
-              min: 3,
+              min: 1,
               max: 20,
-              message: '长度在 3 到 20 个字符',
-              trigger: 'blur'
-            }
-          ], hiredate: [
-            {
-              required: true,
-              message: '请输入',
-              trigger: 'blur'
-            },
-            {
-              min: 3,
-              max: 20,
-              message: '长度在 3 到 20 个字符',
-              trigger: 'blur'
-            }
-          ], realName: [
-            {
-              required: true,
-              message: '请输入',
-              trigger: 'blur'
-            },
-            {
-              min: 3,
-              max: 20,
-              message: '长度在 3 到 20 个字符',
-              trigger: 'blur'
-            }
-          ], telephone: [
-            {
-              required: true,
-              message: '请输入',
-              trigger: 'blur'
-            },
-            {
-              min: 3,
-              max: 20,
-              message: '长度在 3 到 20 个字符',
+              message: '长度在 1 到 20 个字符',
               trigger: 'blur'
             }
           ]
@@ -234,14 +223,16 @@
         listLoading: true,
         listQuery: {
           page: 1,
-          limit: 20,
-          name: undefined
+          limit: 5,
+          name: undefined,
+          createdatetimeStart: undefined,
+          createdatetimeEnd: undefined
         },
         dialogFormVisible: false,
         dialogStatus: '',
-        crmMemberManager_btn_edit: false,
-        crmMemberManager_btn_del: false,
-        crmMemberManager_btn_add: false,
+        careManager_btn_edit: false,
+        careManager_btn_del: false,
+        careManager_btn_add: false,
         textMap: {
           update: '编辑',
           create: '创建'
@@ -249,15 +240,22 @@
         tableKey: 0
       }
     },
+    watch: {
+      // 如果 `value4` 发生改变，这个函数就会运行
+      value4: function(newValue, oldvalue) {
+        this.listQuery.createdatetimeStart = newValue.toString().split(',')[0]
+        this.listQuery.createdatetimeEnd = newValue.toString().split(',')[1]
+        alert(newValue.toString().split(',')[0])
+      }
+    },
     created() {
       this.getList()
-      this.crmMemberManager_btn_edit = true
-      this.crmMemberManager_btn_del = true
-      this.crmMemberManager_btn_add = true
+      this.careManager_btn_edit = true
+      this.careManager_btn_del = true
+      this.careManager_btn_add = true
     },
     computed: {
-      ...mapGetters([
-      ])
+      ...mapGetters([])
     },
     methods: {
       getList() {
@@ -285,6 +283,9 @@
         this.dialogStatus = 'create'
         this.dialogFormVisible = true
       },
+      handleTest() {
+        alert(this.value4)
+      },
       handleUpdate(row) {
         getObj(row.id)
           .then(response => {
@@ -298,20 +299,19 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        })
-          .then(() => {
-            delObj(row.id)
-              .then(() => {
-                this.$notify({
-                  title: '成功',
-                  message: '删除成功',
-                  type: 'success',
-                  duration: 2000
-                })
-                const index = this.list.indexOf(row)
-                this.list.splice(index, 1)
-              })
+        }).then(() => {
+          delObj(row.id).then(() => {
+            this.$notify({
+              title: '成功',
+              message: '删除成功',
+              type: 'success',
+              duration: 2000
+            })
+            const index = this.list.indexOf(row)
+            this.list.splice(index, 1)
+            this.total = this.total - 1
           })
+        })
       },
       create(formName) {
         const set = this.$refs
@@ -372,13 +372,7 @@
   }
 </script>
 <style type="text/css">
-  /*tr.el-table*/
-  /*height:20px;*/
-  /*}*/
-  /*tr.el-table__row{*/
-  /*height: 40px;*/
-  /*}*/
-  .el-table td, .el-table th{
+  .el-table td, .el-table th {
     padding: 4px 0;
   }
 </style>

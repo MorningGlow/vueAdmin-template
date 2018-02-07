@@ -7,7 +7,7 @@
     </el-row>
 
     <el-row>
-      <el-table :data="tableData" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
+      <el-table :data="tableData" v-loading="listLoading" element-loading-text="给我一点时间" border height="50px" fit highlight-current-row
                 style="width: 100%" ref="multipleTable"
                 tooltip-effect="dark"
                 @selection-change="handleSelectionChange">

@@ -149,6 +149,27 @@ export const asyncRouterMap = [
       }
     ]
   },
+  {
+    path: '/pollute',
+    component: Layout,
+    redirect: '/pollute/care',
+    name: '除臭',
+    meta: { title: '除臭', icon: 'table' },
+    children: [
+      {
+        path: 'care',
+        name: '维护',
+        component: _import('pollute/care/index'),
+        meta: { title: '维护', icon: 'table' }
+      },
+      {
+        path: 'caretype',
+        name: '维护类型',
+        component: _import('pollute/caretype/index'),
+        meta: { title: '维护类型', icon: 'tree' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true } // 必需放在所有的router之后，被坑的不行
 ]
 
