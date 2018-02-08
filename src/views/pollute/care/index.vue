@@ -92,8 +92,15 @@
           <el-input v-model="form.remark" placeholder="请输入描述"></el-input>
         </el-form-item>
         <el-form-item label="维护类型ID" prop="caretypeId">
-          <el-input v-model="form.caretypeId" placeholder="请输入维护类型ID"></el-input>
+          <el-input v-model="form.caretypeId" style="display: none" placeholder="请输入维护类型ID"></el-input>
+          <el-autocomplete
+            v-model="state4"
+            :fetch-suggestions="querySearchAsync"
+            placeholder="请输入内容"
+            @select="handleSelect"
+          ></el-autocomplete>
         </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel('form')">取 消</el-button>
@@ -112,6 +119,9 @@
     delObj,
     putObj
   } from '../../../api/pollute/care/index'
+  import {
+    pageCareType
+  } from '../../../api/pollute/caretype/index'
   import {
     mapGetters
   } from 'vuex'
@@ -148,6 +158,10 @@
           }]
         },
         value4: '',
+        restaurants: [],
+        list2: null,
+        state4: '',
+        timeout: null,
         form: {
           name: undefined,
           createdatetime: undefined,
@@ -212,8 +226,8 @@
             },
             {
               min: 1,
-              max: 20,
-              message: '长度在 1 到 20 个字符',
+              max: 36,
+              message: '长度在 1 到 36 个字符',
               trigger: 'blur'
             }
           ]
@@ -227,6 +241,10 @@
           name: undefined,
           createdatetimeStart: undefined,
           createdatetimeEnd: undefined
+        },
+        queryParam: {
+          page: 1,
+          limit: 50
         },
         dialogFormVisible: false,
         dialogStatus: '',
@@ -245,7 +263,7 @@
       value4: function(newValue, oldvalue) {
         this.listQuery.createdatetimeStart = newValue.toString().split(',')[0]
         this.listQuery.createdatetimeEnd = newValue.toString().split(',')[1]
-        alert(newValue.toString().split(',')[0])
+        // alert(newValue.toString().split(',')[0])
       }
     },
     created() {
@@ -359,6 +377,57 @@
           }
         })
       },
+      querySearchAsync(queryString, cb) {
+        var restaurants = this.restaurants
+        var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants
+
+        clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => {
+          cb(results)
+        }, 3000 * Math.random())
+      },
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+        }
+      },
+      handleSelect(item) {
+        console.log(item['id'])
+        this.form.caretypeId = item['id']
+      },
+      loadAll() {
+        var _this = this
+        pageCareType(this.queryParam)
+          .then(response => {
+            _this.restaurants = response.data.rows
+            console.log('_this.restaurants' + _this.restaurants)
+            for (var i = 0; i < _this.restaurants.length; i++) {
+              _this.restaurants[i].value = _this.restaurants[i].name
+            }
+          })
+        // return [
+        //   { 'value': '三全鲜食（北新泾店）', 'address': '长宁区新渔路144号' },
+        //   { 'value': 'Hot honey 首尔炸鸡（仙霞路）', 'address': '上海市长宁区淞虹路661号' },
+        //   { 'value': '新旺角茶餐厅', 'address': '上海市普陀区真北路988号创邑金沙谷6号楼113' },
+        //   { 'value': '泷千家(天山西路店)', 'address': '天山西路438号' },
+        //   { 'value': '胖仙女纸杯蛋糕（上海凌空店）', 'address': '上海市长宁区金钟路968号1幢18号楼一层商铺18-101' },
+        //   { 'value': '贡茶', 'address': '上海市长宁区金钟路633号' },
+        //   { 'value': '豪大大香鸡排超级奶爸', 'address': '上海市嘉定区曹安公路曹安路1685号' },
+        //   { 'value': '茶芝兰（奶茶，手抓饼）', 'address': '上海市普陀区同普路1435号' },
+        //   { 'value': '十二泷町', 'address': '上海市北翟路1444弄81号B幢-107' },
+        //   { 'value': '星移浓缩咖啡', 'address': '上海市嘉定区新郁路817号' },
+        //   { 'value': '阿姨奶茶/豪大大', 'address': '嘉定区曹安路1611号' },
+        //   { 'value': '新麦甜四季甜品炸鸡', 'address': '嘉定区曹安公路2383弄55号' },
+        //   { 'value': 'Monica摩托主题咖啡店', 'address': '嘉定区江桥镇曹安公路2409号1F，2383弄62号1F' },
+        //   { 'value': '浮生若茶（凌空soho店）', 'address': '上海长宁区金钟路968号9号楼地下一层' },
+        //   { 'value': 'NONO JUICE  鲜榨果汁', 'address': '上海市长宁区天山西路119号' },
+        //   { 'value': 'CoCo都可(北新泾店）', 'address': '上海市长宁区仙霞西路' },
+        //   { 'value': '快乐柠檬（神州智慧店）', 'address': '上海市长宁区天山西路567号1层R117号店铺' },
+        //   { 'value': 'Merci Paul cafe', 'address': '上海市普陀区光复西路丹巴路28弄6号楼819' },
+        //   { 'value': '猫山王（西郊百联店）', 'address': '上海市长宁区仙霞西路88号第一层G05-F01-1-306' },
+        //   { 'value': '枪会山', 'address': '上海市普陀区棕榈路' }
+        // ]
+      },
       resetTemp() {
         this.form = {
           username: undefined,
@@ -368,6 +437,12 @@
           description: undefined
         }
       }
+    },
+    mounted() {
+      this.loadAll()
+      // this.restaurants.forEach((value, index, array) => {
+      //   this.restaurants[index]['value'] = value['name']
+      // })
     }
   }
 </script>

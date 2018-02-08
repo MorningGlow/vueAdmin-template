@@ -8,6 +8,14 @@ export function page(query) {
   })
 }
 
+export function pageCareType(query) {
+  return fetch({
+    url: '/api/yun-pollute/caretype/page',
+    method: 'get',
+    params: query
+  })
+}
+
 export function addObj(obj) {
   return fetch({
     url: '/api/yun-pollute/caretype',
