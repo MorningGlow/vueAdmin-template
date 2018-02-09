@@ -261,9 +261,13 @@
     watch: {
       // 如果 `value4` 发生改变，这个函数就会运行
       value4: function(newValue, oldvalue) {
-        this.listQuery.createdatetimeStart = newValue.toString().split(',')[0]
-        this.listQuery.createdatetimeEnd = newValue.toString().split(',')[1]
-        // alert(newValue.toString().split(',')[0])
+        if (newValue === undefined || newValue === null) {
+          this.listQuery.createdatetimeStart = null
+          this.listQuery.createdatetimeEnd = null
+        } else {
+          this.listQuery.createdatetimeStart = newValue.toString().split(',')[0]
+          this.listQuery.createdatetimeEnd = newValue.toString().split(',')[1]
+        }
       }
     },
     created() {
@@ -308,10 +312,6 @@
         getObj(row.id)
           .then(response => {
             this.form = response.data // 直接赋值会导致时间类型转换出问题
-            // this.form.caretypeId = response.data.caretypeId
-            // this.form.id = response.data.id
-            // this.form.name = response.data.name
-            // this.form.remark = response.data.remark
             this.dialogFormVisible = true
             this.dialogStatus = 'update'
           })
@@ -365,7 +365,11 @@
         set[formName].validate(valid => {
           if (valid) {
             this.dialogFormVisible = false
-            // var json = {} 如何遍历JSON
+            // var json = {} // 如何遍历JSON createdatetime: null,          createdatetimeStart: undefined,
+            delete this.form['createdatetime']
+            delete this.form['modifydatetime']
+            delete this.form['createdatetimeStart']
+            delete this.form['createdatetimeEnd']
             putObj(this.form.id, this.form).then(() => {
               this.dialogFormVisible = false
               this.getList()
